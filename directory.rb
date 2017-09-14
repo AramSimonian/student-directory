@@ -18,12 +18,14 @@ def print_header
 end
 
 def print_names(names, starts_with = "", shorter_than = 999)
+  line_width = 80
   # names.each_with_index do |name, index|
   #     puts "#{index + 1} #{name[:name]} (#{name[:cohort]} cohort)" if name[:name].start_with?(starts_with) && name[:name].length < short_than
   # end
   index = 0
   while index < names.count
-      puts "#{index + 1} #{names[index][:name]} (#{names[index][:cohort]} cohort)" \
+      puts "#{index + 1} #{names[index][:name].center(line_width/3)}" +
+          "(#{names[index][:cohort]} cohort)".rjust(line_width/3) +
           "#{names[index][:country]}" \
             if names[index][:name].start_with?(starts_with) \
               && names[index][:name].length < shorter_than
