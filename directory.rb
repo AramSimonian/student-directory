@@ -17,9 +17,9 @@ def print_header
   puts "--------------------------------"
 end
 
-def print_names(names)
-  names.each do |name|
-    puts "#{name[:name]} (#{name[:cohort]} cohort)"
+def print_names(names, starts_with = "", short_than = 999)
+  names.each_with_index do |name, index|
+      puts "#{index + 1} #{name[:name]} (#{name[:cohort]} cohort)" if name[:name].start_with?(starts_with) && name[:name].length < short_than
   end
 end
 
@@ -44,7 +44,7 @@ def input_students
   students
 end
 
-students = input_students
+#students = input_students
 print_header
-print_names(students)
+print_names(students, "T", 11)
 print_footer(students)
