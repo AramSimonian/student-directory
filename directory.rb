@@ -17,20 +17,33 @@ def print_header
   puts "--------------------------------"
 end
 
-def print_names(names, starts_with = "", shorter_than = 999)
-  line_width = 80
-  # names.each_with_index do |name, index|
-  #     puts "#{index + 1} #{name[:name]} (#{name[:cohort]} cohort)" if name[:name].start_with?(starts_with) && name[:name].length < short_than
-  # end
+def print_student_details(names)
   index = 0
   while index < names.count
-      puts "#{index + 1} #{names[index][:name].center(line_width/3)}" +
-          "(#{names[index][:cohort]} cohort)".rjust(line_width/3) +
-          "#{names[index][:country]}" \
-            if names[index][:name].start_with?(starts_with) \
-              && names[index][:name].length < shorter_than
+      print_index index
+      print_name names[index][:name], 80
+      print_cohort names[index][:cohort], 80
+      print_country names[index][:country]
+      print "\n"
+
       index += 1
   end
+end
+
+def print_index(index)
+  print index + 1
+end
+
+def print_name(name, line_width)
+  print name.center(line_width/3)
+end
+
+def print_cohort(cohort, line_width)
+  print "(#{cohort} cohort)".rjust(line_width/3)
+end
+
+def print_country(country)
+  print country
 end
 
 def print_footer(names)
@@ -52,7 +65,7 @@ def input_students
 
     # add the student hash to the array
     students << {name: name, cohort: cohort.to_sym, country: :UK}
-    puts "Now we have #{students.count} student#{'s' if students.count}"
+    puts "Now we have #{students.count} student#{'s' if students.count > 0}"
     # get another name from the user
     puts
     puts "Next student:"
@@ -64,5 +77,5 @@ end
 
 students = input_students
 print_header
-print_names(students)
+print_student_details(students)
 print_footer(students)
