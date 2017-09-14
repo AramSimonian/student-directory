@@ -46,9 +46,9 @@ def input_students
   name = gets.chomp
   while !name.empty? do
     cohort = ""
-    puts "...and what cohort are they in?"
+    puts "...and what cohort are they in? (default is November)"
     cohort = gets.chomp
-    break if cohort.empty?
+    cohort = "November" if cohort.empty?
 
     # add the student hash to the array
     students << {name: name, cohort: cohort.to_sym, country: :UK}
