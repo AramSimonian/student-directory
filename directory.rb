@@ -12,6 +12,35 @@ students = [
   {name: "Norman Bates", cohort: :november}
 ]
 
+def interactive_menu
+
+  loop do
+    # 1 print the menu and ask the user what to do
+    puts "1. Input the students"
+    puts "2. Show the students"
+    puts "9. Exit"
+
+    # 2 read the input and save it into a variable
+    selection = gets.chomp
+
+    # 3 execute the action
+    case selection
+    when "1"
+      # input the students
+      input_students
+    when "2"
+      # show the students
+    when "9"
+      exit
+    else
+      puts "Invalid selection - please try again"
+    end
+
+
+  end
+end
+
+
 def print_header
   puts "The students of Villains Academy"
   puts "--------------------------------"
@@ -26,7 +55,7 @@ def print_student_details(names)
 
     names.each_with_index do |name, index|
       if name[:cohort] == cohort
-        print index
+        print index + 1
         print_name names[index][:name], 70/2
         print_cohort names[index][:cohort], 70/2
         print_country names[index][:country]
@@ -65,9 +94,14 @@ def input_students
     cohort = gets.chomp
     cohort = "November" if cohort.empty?
 
-    # add the student hash to the array
-    students << {name: name, cohort: cohort.to_sym, country: :UK}
-    puts "Now we have #{students.count} student#{'s' if students.count > 1}"
+    puts "Is this information correct (y/n)?"
+    puts "#{name}, #{cohort}, UK"
+    confirm = gets.chomp
+    if confirm.downcase == "y"
+      # add the student hash to the array
+      students << {name: name, cohort: cohort.to_sym, country: :UK}
+      puts "Now we have #{students.count} student#{'s' if students.count > 1}"
+    end
     # get another name from the user
     puts
     puts "Next student:"
