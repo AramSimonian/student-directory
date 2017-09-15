@@ -57,7 +57,8 @@ def input_students
   puts "To finish, just hit return twice to any question"
 
   students = []
-  name = gets.chomp
+  name = gets
+  name = name[0...-1] if name.end_with?("\n")
   while !name.empty? do
     cohort = ""
     puts "...and what cohort are they in? (default is November)"
@@ -70,7 +71,8 @@ def input_students
     # get another name from the user
     puts
     puts "Next student:"
-    name = gets.chomp
+    name = gets
+    name = name[0...-1] if name.end_with?("\n")
   end
   # return the array of students
   students
