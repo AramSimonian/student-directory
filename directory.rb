@@ -1,14 +1,14 @@
 students = [
   {name: "Dr. Hannibal Lecter", cohort: :november},
-  {name: "Darth Vader", cohort: :november},
-  {name: "Nurse Ratched", cohort: :november},
-  {name: "Michael Corleone", cohort: :november},
+  {name: "Darth Vader", cohort: :january},
+  {name: "Nurse Ratched", cohort: :march},
+  {name: "Michael Corleone", cohort: :january},
   {name: "Alex DeLarge", cohort: :november},
-  {name: "The Wicked Witch of the West", cohort: :november},
-  {name: "Terminator", cohort: :november},
+  {name: "The Wicked Witch of the West", cohort: :january},
+  {name: "Terminator", cohort: :march},
   {name: "Freddy Krueger", cohort: :november},
-  {name: "The Joker", cohort: :november},
-  {name: "Joffrey Bratheon", cohort: :november},
+  {name: "The Joker", cohort: :march},
+  {name: "Joffrey Bratheon", cohort: :january},
   {name: "Norman Bates", cohort: :november}
 ]
 
@@ -18,28 +18,29 @@ def print_header
 end
 
 def print_student_details(names)
-  index = 0
-  while index < names.count
-      print_index index
-      print_name names[index][:name], 80
-      print_cohort names[index][:cohort], 80
-      print_country names[index][:country]
-      print "\n"
+  cohorts = names.map { |e| e[:cohort] }.uniq.sort
 
-      index += 1
+  index = 1
+  cohorts.each do |cohort|
+    names.select{ |n| n[:cohort]==cohort}
+
+    names.each_with_index do |name, index|
+      if name[:cohort] == cohort
+        print index
+        print_name names[index][:name], 70/2
+        print_cohort names[index][:cohort], 70/2
+        print_country names[index][:country]
+        print "\n"      end
+    end
   end
 end
 
-def print_index(index)
-  print index + 1
-end
-
 def print_name(name, line_width)
-  print name.center(line_width/3)
+  print name.center(line_width)
 end
 
 def print_cohort(cohort, line_width)
-  print "(#{cohort} cohort)".rjust(line_width/3)
+  print "(#{cohort} cohort)".rjust(line_width)
 end
 
 def print_country(country)
@@ -75,7 +76,7 @@ def input_students
   students
 end
 
-students = input_students
+#students = input_students
 print_header
 print_student_details(students)
 print_footer(students)
