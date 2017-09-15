@@ -3,7 +3,7 @@
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -28,7 +28,7 @@ end
 
 def print_menu
   puts "\n\n"
-  puts "1. Input the students"
+  puts "1. Add student details"
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
   puts "4. Load the list from students.csv"
@@ -86,18 +86,18 @@ def input_students
   puts "Please enter the student's name"
   puts "To finish, just hit return twice to any question"
 
-  name = gets
+  name = STDIN.gets
   name = name[0...-1] if name.end_with?("\n")
   while !name.empty? do
     cohort = ""
     puts "...and what cohort are they in? (default is November)"
-    cohort = gets.chomp
+    cohort = STDIN.gets.chomp
     cohort = "November" if cohort.empty?
 
     puts "Is this information correct (enter or 'y' to confirm)?"
     puts "#{name}, #{cohort}, UK"
-    confirm = gets.chomp
-    if confirm.downcase == "y" || ""
+    confirm = STDIN.gets.chomp
+    if confirm.downcase == "y" || confirm.downcase == ""
       # add the student hash to the array
       @students << {name: name, cohort: cohort.to_sym, country: :UK}
       puts "Now we have #{@students.count} student#{'s' if @students.count > 1}"
@@ -105,7 +105,7 @@ def input_students
     # get another name from the user
     puts
     puts "Next student:"
-    name = gets
+    name = STDIN.gets
     name = name[0...-1] if name.end_with?("\n")
   end
   # return the array of students
@@ -124,8 +124,8 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym}
@@ -133,4 +133,17 @@ def load_students
   file.close
 end
 
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else
+    puts "Sorry, #{filename} doesn't exist."
+    exit
+  end
+end
+
+try_load_students
 interactive_menu
