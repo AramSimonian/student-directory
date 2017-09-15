@@ -13,9 +13,10 @@ students = [
 ]
 
 def interactive_menu
-
+  students = []
   loop do
     # 1 print the menu and ask the user what to do
+    puts "\n\n"
     puts "1. Input the students"
     puts "2. Show the students"
     puts "9. Exit"
@@ -27,9 +28,12 @@ def interactive_menu
     case selection
     when "1"
       # input the students
-      input_students
+      students = input_students
     when "2"
       # show the students
+      print_header
+      print_student_details(students)
+      print_footer(students)
     when "9"
       exit
     else
@@ -78,10 +82,11 @@ end
 
 def print_footer(names)
   puts
-  print "Overall, we have #{names.length} great students"
+  print "Overall, we have #{names.length} great student#{'s' if names.length > 1}"
 end
 
 def input_students
+  puts "\n"
   puts "Please enter the student's name"
   puts "To finish, just hit return twice to any question"
 
@@ -112,7 +117,4 @@ def input_students
   students
 end
 
-students = input_students
-print_header
-print_student_details(students)
-print_footer(students)
+interactive_menu
