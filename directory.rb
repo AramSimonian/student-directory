@@ -66,7 +66,7 @@ def input_students
 
     # add the student hash to the array
     students << {name: name, cohort: cohort.to_sym, country: :UK}
-    puts "Now we have #{students.count} student#{'s' if students.count > 0}"
+    puts "Now we have #{students.count} student#{'s' if students.count > 1}"
     # get another name from the user
     puts
     puts "Next student:"
@@ -76,7 +76,7 @@ def input_students
   students
 end
 
-#students = input_students
+students = input_students
 print_header
 print_student_details(students)
 print_footer(students)
