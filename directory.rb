@@ -110,6 +110,7 @@ def input_students
 end
 
 def load_students(filename = "students.csv")
+  @students = []
   File.open(filename, "r") do |file|
     file.readlines.each do |line|
       name, cohort = line.chomp.split(',')
@@ -128,14 +129,16 @@ end
 def confirm_save_students
   puts "Please enter the name of the save file"
   filename = gets.chomp
+  access_type = "w"
   if File.exists?(filename)
-    puts "This file already exists.  Overwrite, append or cancel? (w / r / c)"
+    puts "This file already exists.  Overwrite (w), append (a) or cancel(c)?"
     loop do
-      access_type = gets.chomp
-      break if ['w','r','c'].include?(access_type.downcase!)
+      access_type = (gets.chomp).downcase
+      puts "access_type: #{access_type}"
+      break if ['w','a','c'].include?(access_type)
     end
   end
-  access_type.sub('r', 'r+')
+  access_type.sub('a', 'a+')
   save_students(filename, access_type) if access_type != 'c'
 end
 
@@ -143,7 +146,7 @@ def confirm_load_students
   puts "please enter the name of the file to load"
   filename = gets.chomp
   if File.exists?(filename)
-    load_students
+    load_students filename
   else
     puts "Unable to find that file - please try again"
   end
