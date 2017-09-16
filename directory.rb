@@ -99,7 +99,7 @@ def input_students
     confirm = STDIN.gets.chomp
     if confirm.downcase == "y" || confirm.downcase == ""
       # add the student hash to the array
-      @students << {name: name, cohort: cohort.to_sym, country: :UK}
+      add_student name, cohort
       puts "Now we have #{@students.count} student#{'s' if @students.count > 1}"
     end
     # get another name from the user
@@ -112,6 +112,19 @@ def input_students
   @students
 end
 
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
+  file.readlines.each do |line|
+    name, cohort = line.chomp.split(',')
+    add_student name, cohort
+  end
+  file.close
+end
+
+def add_student(name, cohort)
+  @students << {name: name, cohort: cohort.to_sym}
+end
+
 def save_students
   # open the file for writing
   file = File.open("students.csv","w")
@@ -120,15 +133,6 @@ def save_students
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
     file.puts csv_line
-  end
-  file.close
-end
-
-def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
   end
   file.close
 end
