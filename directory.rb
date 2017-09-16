@@ -94,7 +94,7 @@ def input_students
     puts "Is this information correct (enter or 'y' to confirm)?"
     puts "#{name}, #{cohort}, UK"
     confirm = STDIN.gets.chomp
-    add_student(name, cohort) if confirm.downcase == "y" || confirm.downcase == ""
+    add_student(name, cohort, true) if confirm.downcase == "y" || confirm.downcase == ""
     # get another name from the user
     puts "\nNext student:"
     name = STDIN.gets.chomp
@@ -103,7 +103,7 @@ def input_students
   @students
 end
 
-def load_students()
+def load_students(filename)
   @students = []
   CSV.foreach(filename) do |row|
     name, cohort = row.chomp.split(',')
