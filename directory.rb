@@ -16,9 +16,9 @@ def process(selection)
     # show the students
     show_students
   when "3"
-    save_students
+    confirm_save_students
   when "4"
-    load_students
+    confirm_load_students
   when "9"
     exit
   else
@@ -30,8 +30,8 @@ def print_menu
   puts "\n\n"
   puts "1. Add student details"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save the list to a CSV"
+  puts "4. Load the list from a CSV"
   puts "9. Exit"
 end
 
@@ -86,8 +86,7 @@ def input_students
   puts "Please enter the student's name"
   puts "To finish, just hit return twice to any question"
 
-  name = STDIN.gets
-  name = name[0...-1] if name.end_with?("\n")
+  name = STDIN.gets.chomp
   while !name.empty? do
     cohort = ""
     puts "...and what cohort are they in? (default is November)"
@@ -100,34 +99,59 @@ def input_students
     if confirm.downcase == "y" || confirm.downcase == ""
       # add the student hash to the array
       add_student name, cohort
-      puts "Now we have #{@students.count} student#{'s' if @students.count > 1}"
     end
     # get another name from the user
     puts
     puts "Next student:"
-    name = STDIN.gets
-    name = name[0...-1] if name.end_with?("\n")
+    name = STDIN.gets.chomp
   end
   # return the array of students
   @students
 end
 
 def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-    add_student name, cohort
+  File.open(filename, "r") do |file|
+    file.readlines.each do |line|
+      name, cohort = line.chomp.split(',')
+      add_student name, cohort
+    end
+    file.close
+    puts "Loaded #{@students.count} from #{filename}"
   end
-  file.close
 end
 
-def add_student(name, cohort)
+def add_student(name, cohort, print_message = false)
   @students << {name: name, cohort: cohort.to_sym}
+  puts "Now we have #{@students.count} student#{'s' if @students.count != 1}" if print_message
 end
 
-def save_students
+def confirm_save_students
+  puts "Please enter the name of the save file"
+  filename = gets.chomp
+  if File.exists?(filename)
+    puts "This file already exists.  Overwrite, append or cancel? (w / r / c)"
+    loop do
+      access_type = gets.chomp
+      break if ['w','r','c'].include?(access_type.downcase!)
+    end
+  end
+  access_type.sub('r', 'r+')
+  save_students(filename, access_type) if access_type != 'c'
+end
+
+def confirm_load_students
+  puts "please enter the name of the file to load"
+  filename = gets.chomp
+  if File.exists?(filename)
+    load_students
+  else
+    puts "Unable to find that file - please try again"
+  end
+end
+
+def save_students(filename, access_type = "w")
   # open the file for writing
-  file = File.open("students.csv","w")
+  file = File.open(filename, access_type)
   # iterate over the array of students
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
@@ -139,10 +163,9 @@ end
 
 def try_load_students
   filename = ARGV.first
-  return if filename.nil?
+  filename ||= "students.csv"
   if File.exists?(filename)
     load_students(filename)
-    puts "Loaded #{@students.count} from #{filename}"
   else
     puts "Sorry, #{filename} doesn't exist."
     exit
