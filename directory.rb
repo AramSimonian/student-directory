@@ -27,8 +27,7 @@ def process(selection)
 end
 
 def print_menu
-  puts "\n\n"
-  puts "1. Add student details"
+  puts "\n\n1. Add student details"
   puts "2. Show the students"
   puts "3. Save the list to a CSV"
   puts "4. Load the list from a CSV"
@@ -82,8 +81,7 @@ def print_footer
 end
 
 def input_students
-  puts "\n"
-  puts "Please enter the student's name"
+  puts "\nPlease enter the student's name"
   puts "To finish, just hit return twice to any question"
 
   name = STDIN.gets.chomp
@@ -96,29 +94,22 @@ def input_students
     puts "Is this information correct (enter or 'y' to confirm)?"
     puts "#{name}, #{cohort}, UK"
     confirm = STDIN.gets.chomp
-    if confirm.downcase == "y" || confirm.downcase == ""
-      # add the student hash to the array
-      add_student name, cohort
-    end
+    add_student(name, cohort) if confirm.downcase == "y" || confirm.downcase == ""
     # get another name from the user
-    puts
-    puts "Next student:"
+    puts "\nNext student:"
     name = STDIN.gets.chomp
   end
   # return the array of students
   @students
 end
 
-def load_students(filename = "students.csv")
+def load_students()
   @students = []
-  File.open(filename, "r") do |file|
-    file.readlines.each do |line|
-      name, cohort = line.chomp.split(',')
-      add_student name, cohort
-    end
-    file.close
-    puts "Loaded #{@students.count} from #{filename}"
+  CSV.foreach(filename) do |row|
+    name, cohort = row.chomp.split(',')
+    add_student name, cohort
   end
+  puts "Loaded #{@students.count} from #{filename}"
 end
 
 def add_student(name, cohort, print_message = false)
@@ -131,14 +122,13 @@ def confirm_save_students
   filename = gets.chomp
   access_type = "w"
   if File.exists?(filename)
-    puts "This file already exists.  Overwrite (w), append (a) or cancel(c)?"
     loop do
+      puts "This file already exists.  Overwrite (w), append (a) or cancel(c)?"
       access_type = (gets.chomp).downcase
       puts "access_type: #{access_type}"
       break if ['w','a','c'].include?(access_type)
     end
   end
-  access_type.sub('a', 'a+')
   save_students(filename, access_type) if access_type != 'c'
 end
 
